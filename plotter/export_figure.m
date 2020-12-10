@@ -62,7 +62,7 @@ function export_figure(get_current_figure, get_path, get_name, get_export_format
                 case '.svg'
                     get_export_format = '.svg';
                 case '.eps'  
-                    get_export_format = '.epsc2'; %eps level 2 colored
+                    get_export_format = '.eps'; %eps level 2 colored
                 case '.jpg'
                     get_export_format = '.jpeg';
                 case '.png'

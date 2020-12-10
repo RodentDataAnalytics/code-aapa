@@ -13,6 +13,8 @@ function part3_subSegmentation(output,output_figs,...
     arena_coordinates_missing = []; %we now have everything
     
     todo = {'subseg_0.5_5.mat','subseg_0.6_5.mat'}; %for the plot
+    
+    [center_x,center_y,center_r,trial_angle,time_r,rotation_freq] = exp_properties;
 
 
     %% SubSegmentation: speed change
