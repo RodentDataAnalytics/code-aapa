@@ -5,6 +5,6 @@ function p = path_first_event(pts, state)
     if ~isempty(pos)
         p = pts(pos(1), 1);
     else
-        p = 1e9;
+        p = 0;%1e9;
     end
 end

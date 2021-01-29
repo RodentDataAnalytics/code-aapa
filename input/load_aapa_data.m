@@ -1,4 +1,4 @@
-function traj = load_aapa_data(ppath,group,pattern,id_day_mask)
+function traj = load_aapa_data(ppath,group,pattern,id_day_mask,varargin)
 %LOAD_AAPA_DATA 
     
     rev_day = 1; %option to parsr day and trial numbers from file name
@@ -35,8 +35,15 @@ function traj = load_aapa_data(ppath,group,pattern,id_day_mask)
 %             end  
         
         %Get the points (arena)
-        pts_arena = read_trajectory(fullfile(files_arena(j).folder,files_arena(j).name));
-        
+        if isempty(varargin)
+            pts_arena = read_trajectory(fullfile(files_arena(j).folder,files_arena(j).name));
+        else
+            %Generate the coordinates using the script
+            center_x = 127;
+            center_y = 127;
+            pts_arena = path_arena_coord( pts, center_x, center_y, 1);
+        end
+            
         %Append the trajectory
         new_traj = trajectory(pts, 1, track, group, id, trial, trial , -1, -1, 1, TRIAL_TYPES(trial));
         new_traj.set_property('ARENA_COORDINATES', pts_arena);

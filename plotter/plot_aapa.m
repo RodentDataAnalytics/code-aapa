@@ -8,11 +8,8 @@ function f = plot_aapa(points,varargin)
     draw_arena = 1;
     ax = [];
 
-    ang = pi/180*135; %ones(1,6); %'SHOCK_AREA_ANGLE'
-    ra = 127;
-    x0 = 127;
-    y0 = 127;
-    
+    [x0,y0,ra,ang,~,~] = exp_properties;
+
     LineWidth_traj = 2;
     Color_path = [0 0 0];
     LineStyle = '-';

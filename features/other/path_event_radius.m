@@ -22,7 +22,7 @@ function ret = path_event_radius(pts, center_x, center_y, radius, state, varargi
     end   
     
     if isempty(r)
-        ret = 1e9;
+        ret = 0;%1e9;
     else
         ret = mean(r);
     end

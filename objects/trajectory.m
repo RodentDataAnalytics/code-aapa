@@ -1,6 +1,6 @@
 classdef trajectory < handle
     %TRAJECTORY Stores points of a trajectory or segment of trajectory 
-    properties(GetAccess = 'public', SetAccess = 'protected')
+    properties(GetAccess = 'public', SetAccess = 'public')
         points = [];
         % trajectory/segment identification
         set = -1;
@@ -18,7 +18,7 @@ classdef trajectory < handle
         tags = {};
     end
     
-    properties(GetAccess = 'protected', SetAccess = 'protected')        
+    properties(GetAccess = 'public', SetAccess = 'public')        
         feat_val_ = [];    
         hash_ = -1;
         properties_ = [];

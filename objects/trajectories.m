@@ -8,12 +8,12 @@ classdef trajectories < handle
         clustering_must_link = 0;
     end
     
-    properties(GetAccess = 'public', SetAccess = 'protected')
+    properties(GetAccess = 'public', SetAccess = 'public')
         items = [];        
         parent = []; % parent set of trajectories (if these are the segments)
     end
     
-    properties(GetAccess = 'protected', SetAccess = 'protected')
+    properties(GetAccess = 'public', SetAccess = 'public')
         hash_ = -1;
         trajhash_ = [];
         partitions_ = [];       

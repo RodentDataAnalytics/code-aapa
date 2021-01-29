@@ -1,4 +1,5 @@
-function [centers,wcd_vec,wcd,bcd_mat,bcd,data] = clustering_metrics(x,idx,varargin)
+function [centers,wcd_vec,wcd,bcd_mat,bcd,data,centersMed] = ...
+    clustering_metrics(x,idx,varargin)
 %CLUSTERING_METRICS performes various measurements about the clustering
 
 %INPUT: 
@@ -69,6 +70,7 @@ function [centers,wcd_vec,wcd,bcd_mat,bcd,data] = clustering_metrics(x,idx,varar
     nc = length(clusters);
     centers = zeros(nc,p);
     wcd_vec = zeros(nc,1);
+    centersMed = zeros(nc,p);
     
     % Weight the data
     data = repmat(w,n,1) .* data;
@@ -78,6 +80,7 @@ function [centers,wcd_vec,wcd,bcd_mat,bcd,data] = clustering_metrics(x,idx,varar
         a = find(labs==clusters(i));
         % Centroids
         centers(i,:) = mean(data(a,:));
+        centersMed(i,:) = median(data(a,:));
         % Within cluster distance per cluster
         switch option_within_cluster_distance
             case 'wcd_centroids'

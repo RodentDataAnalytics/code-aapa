@@ -46,6 +46,9 @@ function [idx,centroids,w,niter,C,iflag] = pcskmeans(x,k,s,constr,init_centers,v
     % Display
     DISPLAY = 0;
     
+    aML = 1;
+    aCL = 1;
+    
     % Custom parameters
     for i = 1:length(varargin)
         if isequal(varargin,'metric')
@@ -56,7 +59,11 @@ function [idx,centroids,w,niter,C,iflag] = pcskmeans(x,k,s,constr,init_centers,v
         elseif isequal(varargin{i},'iters')    
             iters = varargin{i+1};        
         elseif isequal(varargin{i},'iterk')    
-            iterk = varargin{i+1};                        
+            iterk = varargin{i+1};     
+        elseif isequal(varargin{i},'MLweight')    
+            aML = varargin{i+1};  
+        elseif isequal(varargin{i},'CLweight')    
+            aCL = varargin{i+1};  
         % Display    
         elseif isequal(varargin{i},'DISPLAY')   
             DISPLAY = varargin{i+1};        
@@ -86,7 +93,7 @@ function [idx,centroids,w,niter,C,iflag] = pcskmeans(x,k,s,constr,init_centers,v
     end    
     [idx,centroids,~,~,~] = mpckmeans(x,k,constr,...
         'centers',init_centers,'iterations',iterk,'metric_learning',0,...
-        'transitiveML',0,'transitiveCL',0,'gap_iterations',1);   
+        'transitiveML',0,'transitiveCL',0,'gap_iterations',1,'MLweight',aML,'CLweight',aCL);   
     
     % Check if we have empty cluster(s)
     if length(unique(idx)) ~= k
@@ -123,7 +130,7 @@ function [idx,centroids,w,niter,C,iflag] = pcskmeans(x,k,s,constr,init_centers,v
             end              
             [idx,centroids,~,~,~] = mpckmeans(wx,k,constr,...
                 'centers',centroids,'iterations',iterk,'metric_learning',0,...
-                'transitiveML',0,'transitiveCL',0,'gap_iterations',1);               
+                'transitiveML',0,'transitiveCL',0,'gap_iterations',1,'MLweight',aML,'CLweight',aCL);               
             % Check if we have empty cluster(s)
             if length(unique(idx)) ~= k
                 iflag = 1;
