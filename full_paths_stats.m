@@ -10,7 +10,7 @@ clc
 start_folder = pwd;
 
 format = '.png';
-quality = 'Low Quality';
+quality = 'High Quality';
 
 addpath(fullfile(pwd,'objects'));
 addpath(fullfile(pwd,'plotter'));
@@ -32,10 +32,10 @@ feats_str = {'Ang. distance shock signed';...%1
     'Maximum time between shocks';...%16
     'Time for first shock';...%17
     'Variance speed arena';...%18
-    'Length (arena)';...%19
+    'Total path length (arena)';...%19
     'Number of shocks';...%20
     'IQR radius (arena)';...%21
-    'Length';...%22
+    'Total path length';...%22
     'Latency'};%23
 
 todo = {[15,17,20,16,6,19], {'','[s]','','[s]','[cm/s]','[m]'}};
@@ -69,7 +69,7 @@ for i = 1:length(ids)
         tr = paths.items(tmp(j)).trial;
         gr = paths.items(tmp(j)).group;
         id = paths.items(tmp(j)).id;
-        for F = 1:size(feature_values,2)
+        for F = 1:size(feature_values, 2)
             if gr == 1
                 feats_mats{F,gr}(id+group1_start_id,tr) = feature_values(tmp(j),F);
             elseif gr == 2
@@ -81,8 +81,11 @@ for i = 1:length(ids)
     end
 end
 
-
-for i = 1:size(feats_mats,1)
+[haxes, fig6] = tight_subplot_cm(2, 3, ...
+                    [2 2], [3 3], [3 2], 20, 35);
+set(fig6, 'Visible', 'off');
+idx = 1;
+for i = todo{1}  % 1:size(feats_mats,1)
     if ~isempty(todo)
         if ~ismember(i,todo{1})
             continue
@@ -102,31 +105,37 @@ for i = 1:size(feats_mats,1)
     end
 
     % 6 trials
-    f = make_boxplot(tmp1, tmp2, 6);
+    ax = haxes(idx);
+    axes(ax);
+    make_boxplot(tmp1, tmp2, 6, ax);
     ylim( [min([tmp1,tmp2],[],'all'), max([tmp1,tmp2],[],'all')] );
     mfried = [];
-    for j = 1:size(feats_mats{i,1},1)
-        mfried = [mfried; [feats_mats{i,1}(j,:)',feats_mats{i,2}(j,:)']];
+    for j = 1:size(feats_mats{i,1}, 1)
+        % Friedman (and p-values) only over the 5 training sessions:
+        mfried = [mfried; [feats_mats{i, 1}(j, 1:5)', feats_mats{i, 2}(j, 1:5)']];
     end
     if isempty(find(isnan(mfried),1))
-        p = friedman(mfried, size(feats_mats{i,1},1),'off');
+        [p, tbl, stats] = friedman(mfried, size(feats_mats{i,1},1), 'off');
     else
-        p = mackskill(mfried, size(feats_mats{i,1},1));
+        error('missing values')
+        % p = mackskill(mfried, size(feats_mats{i,1},1));
     end
-    title(['p-value: ',num2str(p)]);
+    p_rounded = round(p, 4);
+    if p_rounded == 0
+        p_formated = regexprep(sprintf('%g', round(p, 2, 'significant')), ...
+            '(e[+-])0(\d)', '$1$2');
+    else
+        p_formated = p_rounded;
+    end
+    title(['p-value: ', num2str(p_formated)], 'FontSize', 10);
     if ~isequal(ylab,-1)
         ylabel([feats_str{i},' ',ylab]);
     else
         ylabel(feats_str{i});
     end
-    if ~exist(fullfile(outPath,'trials6'),'dir')
-        mkdir(fullfile(outPath,'trials6'));
-    end
-    export_figure(f, fullfile(outPath,'trials6'), ['feat_',num2str(i)], format, quality);
-    export_figure(f, fullfile(outPath,'trials6'), ['feat_',num2str(i)], '.eps', quality);
-    close(f)
 
     % 5 trials
+    %{
     f = make_boxplot(tmp1(:,1:5), tmp2(:,1:5), 5);
     ylim( [min([tmp1(:,1:5),tmp2(:,1:5)],[],'all'), max([tmp1(:,1:5),tmp2(:,1:5)],[],'all')] );
     mfried = [];
@@ -150,4 +159,14 @@ for i = 1:size(feats_mats,1)
     export_figure(f, fullfile(outPath,'trials5'), ['feat_',num2str(i)], format, quality);
     export_figure(f, fullfile(outPath,'trials5'), ['feat_',num2str(i)], '.eps', quality);
     close(f)
+    %}
+    
+    idx = idx + 1;
 end
+
+if ~exist(fullfile(outPath,'trials6'), 'dir')
+    mkdir(fullfile(outPath,'trials6'));
+end
+export_figure(fig6, fullfile(outPath,'trials6'), 'performance_new', format, quality);
+export_figure(fig6, fullfile(outPath,'trials6'), 'performance_new', '.eps', quality);
+close(fig6)

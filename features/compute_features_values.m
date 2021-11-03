@@ -136,14 +136,16 @@ function feature_values = compute_features_values(segments,paths)
             [~,feature_values(i,18),~,~] = path_velocity_rot(segments.items(i), center_x, center_y, rotation_freq, 'ARENA', this_traj);
             
             %Length (arena)
-            feature_values(i,19) = path_length_rot(segments.items(i), center_x, center_y, rotation_freq, 'ARENA', this_traj);
+            [total_length_rot, ~] = path_length_rot(segments.items(i), center_x, center_y, rotation_freq, 'ARENA', this_traj);
+            feature_values(i,19) = total_length_rot;
             %Number of shocks
             feature_values(i,20) = path_count_events(pts, 2);
             %IQR radius (arena)
             [~, feature_values(i,21)] = path_radius_rot(segments.items(i), center_x, center_y, center_r, rotation_freq, 'ARENA', this_traj);
             
             %Length
-            feature_values(i,22) = path_length(pts);
+            [total_length, ~] = path_length(pts);
+            feature_values(i,22) = total_length;
             %Latency
             feature_values(i,23) = path_latency(pts);
         end

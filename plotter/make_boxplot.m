@@ -1,4 +1,4 @@
-function f = make_boxplot(dataG1, dataG2, ntrials)
+function make_boxplot(dataG1, dataG2, ntrials, ax)
 %PMAKE_BOXPLOT 
 
     if size(dataG1,2) ~= size(dataG2,2)
@@ -31,11 +31,9 @@ function f = make_boxplot(dataG1, dataG2, ntrials)
         t = [t,dataG2(:,j)];
     end
     
-    f = figure('Visible','off');
-    ax = axes(f);
-    boxplot(t,'positions',pos);
-    set(ax,'XTick',posx,'XTickLabel',posx_str);
-    xlabel('Trials');
+    boxplot(t, 'positions',pos);
+    set(ax, 'XTick', posx, 'XTickLabel', posx_str);
+    xlabel('Session');
     box off;
     
     h = findobj(ax,'Tag','Box');
@@ -58,6 +56,10 @@ function f = make_boxplot(dataG1, dataG2, ntrials)
     
     h = findobj(ax, 'Tag', 'Outliers');
     set(h, 'MarkerEdgeColor', [0 0 0], 'MarkerFaceColor', [0 0 0]);
-    set(h, 'Visible', 'off'); 
+    set(h, 'Visible', 'off');
+    
+    if size(posx_str,1) == 6
+        xline(mean(posx(end-1:end)), '--', 'Color', [.4, .4, .4], 'LineWidth', 2);
+    end
 end
 
