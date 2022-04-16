@@ -31,3 +31,6 @@ For each subsegmentation the following clustering methodologies: clustering with
 TODO: explain/fix scripts for R code, GUI, Figure 3.
 
 
+## subsegment_stats.ods
+
+Classes in sheets, top tables-control, bottom tables-treated, rows-animals, columns-days, final numbers are total sums of segments numbers.
